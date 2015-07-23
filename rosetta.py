@@ -2,25 +2,26 @@ import json
 import os
 from collections import OrderedDict
 
-serial = 0
-
-
-def transliteration(src, trans):  # source_obj, translation_obj
-    for key in src:
-        print "\n"+key+"\n"
-        if isinstance(src[key], dict):
-            print "RECURSION\n"
-            transliteration(src[key], trans)
-        else:
-            print "WRITE\n"
-            global serial
-            current_serial = str(serial).zfill(6)
-            trans[current_serial] = src[key]
-            src[key] = current_serial
-            serial += 1
 
 
 def generate_translation_docs(source_file):
+
+    serial = 0
+
+    def transliteration(src, trans, serial):  # source_obj, translation_obj
+        for key in src:
+            print "\n"+key+"\n"
+            if isinstance(src[key], dict):
+                print "RECURSION\n"
+                transliteration(src[key], trans, serial)
+            else:
+                print "WRITE\n"
+                serial
+                current_serial = str(serial).zfill(6)
+                trans[current_serial] = src[key]
+                src[key] = current_serial
+                serial += 1
+
     file_basename = os.path.splitext(os.path.basename(source_file))[0]
     filename = file_basename+"-root.json"
     rosetta = file_basename+"-rosetta.json"
@@ -39,10 +40,7 @@ def generate_translation_docs(source_file):
 
         translation_contents = OrderedDict({})
 
-        transliteration(main_contents, translation_contents)
+        transliteration(main_contents, translation_contents, serial)
 
         rosetta_file.write(json.dumps(main_contents))
         translation_file.write(json.dumps(translation_contents))
-
-
-generate_translation_docs('example_simple.json')
