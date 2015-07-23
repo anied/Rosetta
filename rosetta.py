@@ -1,5 +1,6 @@
 import json
 import os
+from collections import OrderedDict
 
 serial = 0
 
@@ -32,8 +33,11 @@ def generate_translation_docs(source_file):
         # Copy the contents of the source_file into root
         root_file.write(raw_contents)
 
-        main_contents = json.loads(raw_contents)
-        translation_contents = {}
+        main_contents = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(raw_contents)
+
+        print main_contents
+
+        translation_contents = OrderedDict({})
 
         transliteration(main_contents, translation_contents)
 
