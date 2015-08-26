@@ -1,6 +1,7 @@
 import json
 import os
 from collections import OrderedDict
+import csv
 
 
 serial = 0
@@ -99,7 +100,7 @@ def merge_translation(translation_doc, rosetta_doc, language):
                 else:
                     src[x] = trans[src[x]]
 
-    # gets rosetta basename then strips off the "-rosetta.jon" to get true basename
+    # gets rosetta basename then strips off the "-rosetta.json" to get true basename
     file_basename = os.path.splitext(os.path.basename(rosetta_doc))[0]
     file_basename = file_basename[0:len(file_basename)-len("-rosetta")]
     translated_json_doc = file_basename+"-"+language+".json"
@@ -113,3 +114,19 @@ def merge_translation(translation_doc, rosetta_doc, language):
         converge_entry(rosetta_stone, translated_content)
 
         merge_doc.write(json.dumps(rosetta_stone))
+
+
+def generate_csv(source_file):
+    file_basename = os.path.splitext(os.path.basename(source_file))[0]
+    csv_filename = file_basename+"-csv.csv"
+
+    with open(source_file, 'r') as translations, open(csv_filename, 'w') as csvfile:
+
+        writer = csv.DictWriter(csvfile, fieldnames=['id', 'original', 'translation'])
+
+        writer.writeheader()
+
+        translation_content = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(translations.read())
+
+        for key in translation_content:
+            writer.writerow({'id': key, 'original': translation_content[key], 'translation': ''})
