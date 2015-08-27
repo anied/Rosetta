@@ -103,7 +103,7 @@ def generate_csv(source_file):
         translation_content = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(translations.read())
 
         for key in translation_content:
-            writer.writerow({'id': key, 'original': translation_content[key], 'translation': ''})
+            writer.writerow({'id': str(key).zfill(6), 'original': translation_content[key], 'translation': ''})
 
 
 def degenerate_csv(source_file):
@@ -116,6 +116,6 @@ def degenerate_csv(source_file):
         reader = csv_unicode.DictReader(src_csv)
 
         for row in reader:
-            translated_content_json[row['id']] = row['translation']
+            translated_content_json[str(row['id']).zfill(6)] = row['translation']
 
         translated_json.write(json.dumps(translated_content_json))
