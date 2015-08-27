@@ -87,22 +87,15 @@ class DictWriter:
         self.encoder = codecs.getincrementalencoder(encoding)()
 
     def writerow(self, row):
+
         encoded_obj = {}
+
         for key in row:
-            print '\n#####'
-            print 'key:'
-            print key
-            print 'value:'
-            print row[key]
-            print 'type:'
-            print type(row[key])
             if isinstance(row[key], unicode):
-                print "~~~~encoding~~~~"
                 encoded_obj[key] = row[key].encode("utf-8")
             else:
                 encoded_obj[key] = str(row[key])
-            print '#####\n'
-        print encoded_obj
+
         self.writer.writerow(encoded_obj)
         # Fetch UTF-8 output from the queue ...
         data = self.queue.getvalue()

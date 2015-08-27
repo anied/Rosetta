@@ -123,13 +123,6 @@ def generate_csv(source_file):
     with open(source_file, 'r') as translations, open(csv_filename, 'w') as csvfile:
 
         writer = csv_unicode.DictWriter(csvfile, fieldnames=['id', 'original', 'translation'])
-        # print writer
-        # print writer.writeheader
-        # l = dir(writer)
-        # d = writer.__dict__
-        # print l
-        # print d
-        # print writer.writer.writeheader
         writer.writeheader()
         translation_content = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(translations.read())
 
