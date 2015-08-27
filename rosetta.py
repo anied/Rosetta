@@ -12,47 +12,23 @@ def generate_translation_docs(source_file):
     def transliterator(src, trans):  # source_obj, translation_obj
 
         global serial
-        print "\n\n\n"
-        print "# # # # #"
-        print ""
-        print "src:"
-        print src
-        print ""
 
         if isinstance(src, dict):
-            print ""
-            print "src is dict"
-            print ""
             for key in src:
-                print "\n\n~~~~iterant~~~~"
-                print "key:"
-                print key
-                print ""
                 if isinstance(key, dict):
-                    print "KEY IS DICT - RECURS"
                     transliterator(key, trans)
                 elif isinstance(src[key], dict) or isinstance(src[key], list):
-                    print "SRC[KEY] IS DICT OR LIST - RECURS"
                     transliterator(src[key], trans)
                 else:
-                    print "---"
-                    print "SRC[KEY] OK FOR TRANSLITERATION"
-                    print "---"
                     current_serial = str(serial).zfill(6)
                     trans[current_serial] = src[key]
                     src[key] = current_serial
                     serial += 1
         elif isinstance(src, list):
-            print "\nsrc is list\n"
             for x in xrange(0, len(src)):
-                print "\n\n~~~~iterant~~~~"
                 if isinstance(src[x], dict):
-                    print "LIST ITEM AT LOCATION %i IS DICT - RECURS" % x
                     transliterator(src[x], trans)
                 else:
-                    print "---"
-                    print "LIST ITEM AT LOCATION %i OK FOR TRANSLITERATION" % x
-                    print "---"
                     current_serial = str(serial).zfill(6)
                     trans[current_serial] = src[x]
                     src[x] = current_serial
@@ -128,3 +104,18 @@ def generate_csv(source_file):
 
         for key in translation_content:
             writer.writerow({'id': key, 'original': translation_content[key], 'translation': ''})
+
+
+def degenerate_csv(source_file):
+    file_basename = os.path.splitext(os.path.basename(source_file))[0]
+    translated_filename = file_basename+"-TRANSLATED.json"
+    translated_content_json = OrderedDict({})
+
+    with open(source_file, 'r') as src_csv, open(translated_filename, 'w') as translated_json:
+
+        reader = csv_unicode.DictReader(src_csv)
+
+        for row in reader:
+            translated_content_json[row['id']] = row['translation']
+
+        translated_json.write(json.dumps(translated_content_json))
