@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 import json
 import os
 from collections import OrderedDict
 import csv_unicode
+from html_entity_conversion import encode, decode
 
 
 serial = 0
@@ -21,7 +23,7 @@ def generate_translation_docs(source_file):
                     transliterator(src[key], trans)
                 else:
                     current_serial = str(serial).zfill(6)
-                    trans[current_serial] = src[key]
+                    trans[current_serial] = decode(src[key])
                     src[key] = current_serial
                     serial += 1
         elif isinstance(src, list):
@@ -30,7 +32,7 @@ def generate_translation_docs(source_file):
                     transliterator(src[x], trans)
                 else:
                     current_serial = str(serial).zfill(6)
-                    trans[current_serial] = src[x]
+                    trans[current_serial] = decode(src[x])
                     src[x] = current_serial
                     serial += 1
 
@@ -55,7 +57,7 @@ def generate_translation_docs(source_file):
         transliterator(main_contents, translation_contents)
 
         rosetta_file.write(json.dumps(main_contents))
-        translation_file.write(json.dumps(translation_contents))
+        translation_file.write(json.dumps(translation_contents, ensure_ascii=False).encode("UTF-8"))
 
 
 def merge_translation(translation_doc, rosetta_doc, language):
@@ -68,13 +70,13 @@ def merge_translation(translation_doc, rosetta_doc, language):
                 elif isinstance(src[key], dict) or isinstance(src[key], list):
                     converge_entry(src[key], trans)
                 else:
-                    src[key] = trans[src[key]]
+                    src[key] = encode(trans[src[key]])
         if isinstance(src, list):
             for x in xrange(0, len(src)):
                 if isinstance(src[x], dict):
                     converge_entry(src[x], trans)
                 else:
-                    src[x] = trans[src[x]]
+                    src[x] = encode(trans[src[x]])
 
     # gets rosetta basename then strips off the "-rosetta.json" to get true basename
     file_basename = os.path.splitext(os.path.basename(rosetta_doc))[0]

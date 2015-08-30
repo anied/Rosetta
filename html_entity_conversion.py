@@ -18,6 +18,8 @@ def encode(unicode_string):
 
         return striter
 
+    unicode_string = unicode(unicode_string)  # Just in case a non-string gets passed in
+
     strip_amps = unicode_string.replace(u'&', u'&amp;')
 
     convertedstring = iterate(strip_amps)
@@ -36,6 +38,8 @@ def decode(html_encoded_string):
         else:
             #TODO - add warning (output log?)
             return matchobj.group(0)
+
+    html_encoded_string = unicode(html_encoded_string)  # Just in case a non-string gets passed in
 
     decoded_string = re.sub(entity_pattern, conversion_iterator, html_encoded_string)
 

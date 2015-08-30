@@ -5,11 +5,14 @@
   "sex": "M",
   "salary": 70000,
   "registered": true,
-  "interests": [ "Reading", "Mountain Biking", "Hacking" ],
+  "interests": [ "Reading &amp; Writing", "Mountain Biking", "Hacking" ],
   "favorites": {
     "color": "Blue",
     "sport": "Soccer",
-    "food": "Spaghetti"
+    "food": "Spaghetti",
+    "band": "Motörhead",
+    "french_phrase": "Lorem Ipsum est un g&eacute;n&eacute;rateur de faux textes al&eacute;atoires. Vous choisissez le nombre de paragraphes, de mots ou de listes. Vous obtenez alors un texte al&eacute;atoire que vous pourrez ensuite utiliser librement dans vos maquettes.",
+    "french_double": "g&eacute;&eacute;rateur"
   }, 
   "skills": [
     {
